@@ -6,10 +6,9 @@ function toggleTheme() {
   
   if (body.classList.contains("dark-theme")) {
     body.classList.remove("dark-theme");
-    themeIcon.src = "sun.svg";
+    themeIcon.src = "sun-icon.png";
   } else {
     body.classList.add("dark-theme");
-    themeIcon.src = "moon.svg";
+    themeIcon.src = "moon-icon.png";
   }
 }
-
