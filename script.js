@@ -6,5 +6,7 @@
   }
 
   const themeButton = document.querySelector('#themeButton');
-  themeButton.addEventListener('click', toggleTheme);
+  themeButton.addEventListener('click', function() {
+    document.body.classList.contains('light') ? document.body.classList.remove('light') : document.body.classList.add('light');
+  });
 </script>
