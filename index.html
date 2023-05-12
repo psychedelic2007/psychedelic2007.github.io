@@ -78,6 +78,18 @@
     <p>&copy; 2023 Your Name. All rights reserved.</p>
   </footer>
 
-<script src=".script.js"></script>  
+<script src=".script.js"></script>
+
+<script>
+  function toggleTheme() {
+    document.body.classList.toggle('light');
+    document.querySelector('header').classList.toggle('light');
+    document.querySelector('footer').classList.toggle('light');
+  }
+
+  const themeButton = document.querySelector('#themeButton');
+  themeButton.addEventListener('click', toggleTheme);
+</script>
+
 </body>
 </html>
