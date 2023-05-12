@@ -27,6 +27,7 @@ nav ul li {
 nav ul li a {
   color: #fff;
   text-decoration: none;
+  transition: color 0.5s ease; /* Added transition for font color */
 }
 
 nav ul li a:hover {
@@ -61,11 +62,15 @@ footer {
 }
 
 body.light {
-  background-color: #fff;
+  background-color: #f2f2f2; /* Updated light background color */
   color: #111;
 }
 
 body.light header,
 body.light footer {
-  background-color: #f2f2f2;
+  background-color: #fff;
+}
+
+body.light nav ul li a {
+  color: #111; /* Updated font color in light mode */
 }
