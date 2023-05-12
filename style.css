@@ -60,13 +60,12 @@ footer {
   color: #fff;
 }
 
-.light {
+body.light {
   background-color: #fff;
   color: #111;
 }
 
-.light header,
-.light footer {
+body.light header,
+body.light footer {
   background-color: #f2f2f2;
 }
-
