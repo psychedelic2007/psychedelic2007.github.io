@@ -13,6 +13,20 @@ header {
   font-size: 24px;
 }
 
+nav {
+  display: flex;
+}
+
+.nav-link {
+  text-decoration: none;
+  margin-left: 10px;
+  color: #000000;
+}
+
+.nav-link:hover {
+  color: magenta;
+}
+
 nav ul {
   list-style-type: none;
   margin: 0;
@@ -41,8 +55,8 @@ nav ul li a {
 }
 
 .avatar img {
-  width: 200px;
-  height: 200px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
 }
 
