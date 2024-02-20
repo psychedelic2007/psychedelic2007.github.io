@@ -1,0 +1,182 @@
+<!-- dr_roy.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satyam Sangeet</title>
+
+    <link rel="stylesheet" href="dr_roy.css">
+
+    <!-- box-icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
+</head>
+
+<body>
+    <!-- Header Design -->
+    <header class="header">
+        <a href="index.html" class="logo">Satyam.</a>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+
+        <nav class="navbar">
+            <a href="#roy">Home</a>
+            <a href="#project">Project</a>
+            <a href="#mrf">Mathematical Framework</a>
+            <a href="#ml">ML Model</a>
+            <a href="#paper">Publication</a>
+        </nav>
+    </header>
+
+    <!-- Dr. Roy details -->
+    <section class="roy" id="roy">
+        <h2 class="heading">Dr. Susmita<span> Roy</span></h2>
+
+        <div class="box">
+            <div class="content">
+                <div class="content">
+                    <h2>Assistant Professor</h2>
+                    <p><b>Indian Institute of Science Education and Research (IISER), Kolkata</b></p>
+                    <p><em>Working Period: January 2021 - December 2023</em></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="box-container">
+            <div class="box">
+                <img src="people_images/susmita.png">
+            </div>
+
+            <div class="home-sci">
+                <a href="https://scholar.google.com/citations?user=2vfozlQAAAAJ&hl=en"><i class='bx bxl-google' ></i></a>
+                <a href="https://www.iiserkol.ac.in/web/en/people/faculty/dcs/susmita-roy/#gsc.tab=0"><i class='bx bxs-school'></i></a>
+                <a href="https://www.drsusmitaroy.com/"><i class='bx bx-female'></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Undertaken section -->
+    <section class="project" id="project">
+        <h2 class="heading">Tracking Mutational Response of <span>SARS-CoV-2 Variants</span></h2>
+
+        <div class="box">
+            <div class="project-content">
+                <div class="p-content">
+                    <p>I joined Dr. Roy's lab in January 2021 as a prestigious Har
+                        Govind Khorana Junior Research Fellow for a project funded
+                        by the Department of Biotechnology, Government of India. The
+                        main focus of my work was to investigate the role of small ions
+                        in modulating the dynamics of RNA. But with an interest in Viral
+                        surveillance and Mutations, I started working with the genomic
+                        sequences of SARS-CoV-2 to decipher the role of mutations in making
+                        the virus adapt within the host population. I started by analysing
+                        the genomic sequence of the virus and integrating the subtle concepts
+                        of Information Theory to understand the genomic and protein mutations.</p>
+
+                    <p>By analysing the huge genomic dataset, we calculated the sequence entropy of
+                        the different viral variants over a period of time to understand how the virus
+                        propagates within the host population.</p>
+
+                    <p>Our result showed us how different segments of the surface glycoprotein evolved
+                        over time with the N-Terminal Domain playing an important role in modulating the
+                        viral infectivity via the Receptor Binding Domain.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="box-container1">
+            <div class="box1">
+                <img src="people_work/cov_anim.gif">
+                <p>Source: <a href="https://www.rcsb.org/structure/6vsb" target="_blank">Spike Glycoprotein (PDB ID: 6VSB)</a></p>
+            </div>
+        </div>
+    </section>
+
+    <section class="mrf" id="mrf">
+        <h2 class="heading">Mathematical <span>Framework</span></h2>
+        <div class="box2">
+            <div class="char-content">
+                <div class="c-content">
+                    <p>As the virus evolved over time, our model showed us that the key domain
+                        of the surface glycoprotein, the Receptor Binding Domain (RBD, responsible
+                        for the viral infectivity) showed a stable genomic entropy suggesting that
+                        the RBD gets stabilized easily in the host population as the virus propagates.</p>
+
+                    <p>But, the N-Terminal Domain (NTD) showed an increase in the genomic entropy from
+                        the ancestral variants to a Variant of Interest (VOI) to a Variant of Concern (VOC).
+                        This data holds true with the experimental observation as well as with the extensive
+                        Molecular Dynamic Simulations studies conducted by Dr. Roy and her group
+                        <a href="https://doi.org/10.1021/acs.jpclett.0c01431" target="_blank">(Roy et al., 2020, ACS JPCL).</a></p>
+
+                    <p>To quantify our observation, we developed a mathematical framework to describe the
+                        phase transition from the VOI to a VOC. This phase transition corresponds with the
+                        phase transition of a system as observed via the Statistical Mechanical equations.</p>
+
+                    <p>Mutational Response Function:</p>
+                    <p><span style="margin-left: 20rem" class="mathjax">\( \frac{<\Delta S^{2} > }{\bar{S}} = \frac{\frac{1}{N}\sum_{i}^{N}(S_{i} - \bar{S})^{2}}{\bar{S}}\)</span></p>
+                    <script type="text/javascript">MathJax.Hub.Queue(["Typeset", MathJax.Hub, "mathjax"]);</script>
+                </div>
+            </div>
+        </div>
+        <div class="box-container2">
+            <div class="box2">
+                <img src="people_work/cov_result.jpg">
+            </div>
+        </div>
+    </section>
+
+    <section class="ml" id="ml">
+        <h2 class="heading">Machine Learning <span>Model</span></h2>
+        <div class="box3">
+            <div class="ml-content">
+                <div class="ml-content">
+                    <p>We further performed a similar calculation for other Variants of
+                        Concerns including Alpha, Beta, Gamma, and Omicron Variants. We
+                        found that the virus follows a similar trend of evolution in all
+                        the other variants suggesting a common pattern of evolution in the
+                        viral family. Our work points to the fact that a common principle of
+                        evolution is being followed by the viruses belonging to a similar class,
+                        and this property could be capitalized upon to predict the viral progression.
+                        With this aim in mind, we utilize the idea of Machine Learning to develop
+                        a Multi-Layer Perceptron (MLP) model to predict the possible mutational
+                        residues in future variants.</p>
+                </div>
+            </div>
+        </div>
+        <div class="box-container3">
+            <div class="box3">
+                <img src="people_work/model_architecture.png">
+                <p><em>Multi-Layer Perceptron Model having 4-8-8-1 architecture</em></p>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="paper" id="paper">
+        <h2 class="heading">Our <span>Publication</span></h2>
+        <div class="paper-content">
+            <div class="paper-content">
+                <p>To know more about our work, please go through our published work:</p>
+                <p><b>Quantifying Mutational Response to Track the Evolution of SARS-CoV-2 Spike Variants: Introducing a Statistical-Mechanics-Guided Machine Learning Method</b></p>
+                <p>Satyam Sangeet, Raju Sarkar, Saswat Kumar Mohanty, Susmita Roy</p>
+                <p><em>The Journal of Physical Chemistry B (2022)</em></p>
+                <p>DOI: <a href="https://doi.org/10.1021/acs.jpcb.2c04574" target="_blank">10.1021/acs.jpcb.2c04574</a></p>
+            </div>
+
+            <div class="paper-content">
+                <p>To know more about our work, please go through our published work:</p>
+                <p><b>Evolution of Sequence and Structure of SARS-CoV-2 Spike Protein: A Dynamic Perspective</b></p>
+                <p>Anushree Sinha*, Satyam Sangeet*, Susmita Roy</p>
+                <p><em>ACS Omega (2023)</em></p>
+                <p>DOI: <a href="https://doi.org/10.1021/acsomega.3c00944" target="_blank">10.1021/acsomega.3c00944</a></p>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+</html>

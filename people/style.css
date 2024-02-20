@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    scroll-behaviour: smooth;
+    text-transform: capitalize;
+    transition: all 0.2s linear;
+    font-family: 'Poppins', sans-serif;
+}
+
+:root {
+    --bg-color: #01151e;
+    --second-bg-color: #112e42;
+    --text-color: #ededed;
+    --main-color: #00abf0;
+}
+
+html {
+    font-size: 62.5%;
+    overflow-x: hidden;
+    scroll-behaviour: smooth;
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+html::-webkit-scrollbar {
+  width: 0.8rem;
+}
+html::-webkit-scrollbar-track {
+  background: rgb(235, 202, 245);
+}
+html::-webkit-scrollbar-thumb {
+  background: #8ff7be;
+}
+
+/*navbar starts */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem 9%;
+    background: #010e24;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 2.5rem;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.navbar a {
+    font-size: 1.7rem;
+    color: var(--text-color);
+    font-weight: 500;
+    margin-left: 3.5rem;
+    transition: .3s;
+}
+
+.navbar a:hover,
+.navbar a.active {
+    color: var(--main-color);
+}
+
+#menu-icon{
+    font-size: 3.6rem;
+    color: var(--text-color);
+    cursor: pointer;
+    display: none;
+}
+
+section {
+    min-height: 100vh;
+    padding: 10rem 9% 2rem;
+}
+
+.box-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.box {
+  width: calc(33.33% - 1rem);
+  margin-bottom: 2rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.box img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 2rem;
+}
+
+.box h3 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.box h3 a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.box h3 a:hover {
+    color: blue;
+}
+
+.box p {
+  font-size: 1.5rem;
+  color: var(--main-color);
+  margin-bottom: 2.5rem;
+}
+
+.heading {
+    font-size: 7rem;
+    text-align: center;
+}
+
+span {
+    color: var(--main-color);
+}
+
+.neon-link {
+    color: #39FF14; /* Neon Green color */
+}
