@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projectile Motion - Interactive Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #f5f5f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            max-width: 800px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #0066ff;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #333;
+            line-height: 1.6;
+            font-family: Georgia, serif;
+        }
+
+        .divider {
+            width: 100%;
+            max-width: 800px;
+            height: 20px;
+            background-image: repeating-linear-gradient(
+                90deg,
+                #ccc 0px,
+                #ccc 8px,
+                transparent 8px,
+                transparent 16px
+            );
+            margin: 30px 0;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.3s forwards;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+            margin: 40px 0;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.6s forwards;
+        }
+
+        .simulator-wrapper {
+            position: relative;
+            background: white;
+            border: 2px solid #0066ff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 4px 4px 0px rgba(0, 102, 255, 0.1);
+        }
+
+        .simulator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sim-title {
+            font-size: 10px;
+            color: #666;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .sim-label {
+            font-size: 10px;
+            color: #0066ff;
+            letter-spacing: 2px;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .info-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 16px;
+            border: 1px solid #0066ff;
+            font-size: 11px;
+            line-height: 1.8;
+            color: #333;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-overlay div {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .info-label {
+            color: #666;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            color: #0066ff;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .legend {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 16px;
+            border: 1px solid #0066ff;
+            font-size: 10px;
+            line-height: 2;
+            color: #333;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 3px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: #333;
+        }
+
+        .control-value {
+            color: #0066ff;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            outline: none;
+            border-radius: 2px;
+            cursor: pointer;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #0066ff;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #0052cc;
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #0066ff;
+            cursor: pointer;
+            border-radius: 2px;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #0052cc;
+            transform: scale(1.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            background: #0066ff;
+            color: white;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background: #0052cc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 102, 255, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: white;
+            color: #0066ff;
+            border: 1px solid #0066ff;
+        }
+
+        button.secondary:hover {
+            background: #f0f7ff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-label {
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            color: #0066ff;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-unit {
+            font-size: 10px;
+            color: #999;
+            margin-left: 3px;
+        }
+
+        .content {
+            max-width: 800px;
+            padding: 60px 20px;
+            font-family: Georgia, serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .content h2 {
+            font-family: 'Courier New', monospace;
+            color: #0066ff;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            margin-top: 40px;
+        }
+
+        .content p {
+            margin-bottom: 20px;
+        }
+
+        .content::first-letter {
+            font-size: 4rem;
+            float: left;
+            line-height: 0.8;
+            margin-right: 10px;
+            margin-top: 5px;
+            font-weight: bold;
+            color: #0066ff;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>PROJECTILE MOTION</h1>
+        <p>An interactive exploration of two-dimensional motion under constant gravitational acceleration. Adjust parameters and observe how velocity components, trajectory, and flight characteristics change in real-time.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="container">
+        <div class="simulator-wrapper">
+            <div class="simulator-header">
+                <div class="sim-title">[ INTERACTIVE SIMULATOR ]</div>
+                <div class="sim-label">FIG-001</div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="simulatorCanvas"></canvas>
+                
+                <div class="info-overlay" id="infoOverlay">
+                    <div>
+                        <span class="info-label">TIME:</span>
+                        <span class="info-value" id="timeDisplay">0.00 s</span>
+                    </div>
+                    <div>
+                        <span class="info-label">HEIGHT:</span>
+                        <span class="info-value" id="heightDisplay">0.00 m</span>
+                    </div>
+                    <div>
+                        <span class="info-label">DISTANCE:</span>
+                        <span class="info-value" id="distanceDisplay">0.00 m</span>
+                    </div>
+                    <div>
+                        <span class="info-label">SPEED:</span>
+                        <span class="info-value" id="speedDisplay">0.00 m/s</span>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #0066ff;"></div>
+                        <span>TRAJECTORY</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ff6b6b;"></div>
+                        <span>VELOCITY</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #4ecdc4;"></div>
+                        <span>V<sub>x</sub> COMPONENT</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #95e1d3;"></div>
+                        <span>V<sub>y</sub> COMPONENT</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>LAUNCH ANGLE</span>
+                        <span class="control-value"><span id="angleValue">45</span>°</span>
+                    </div>
+                    <input type="range" id="angleSlider" min="0" max="90" value="45" step="1">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>INITIAL VELOCITY</span>
+                        <span class="control-value"><span id="velocityValue">20</span> m/s</span>
+                    </div>
+                    <input type="range" id="velocitySlider" min="5" max="50" value="20" step="1">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="launchBtn">LAUNCH</button>
+                <button class="secondary" id="resetBtn">RESET</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">Max Height</div>
+                    <div class="stat-value"><span id="maxHeightStat">0.00</span><span class="stat-unit">m</span></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Range</div>
+                    <div class="stat-value"><span id="rangeStat">0.00</span><span class="stat-unit">m</span></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Flight Time</div>
+                    <div class="stat-value"><span id="flightTimeStat">0.00</span><span class="stat-unit">s</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <p>Projectile motion represents one of the most fundamental examples of two-dimensional kinematics. When an object is launched into the air with an initial velocity at some angle to the horizontal, it follows a parabolic path determined entirely by its initial conditions and the constant downward acceleration due to gravity.</p>
+
+        <h2>Understanding the Components</h2>
+        
+        <p>The beauty of projectile motion lies in its decomposition into independent horizontal and vertical components. The horizontal velocity remains constant throughout the flight (assuming no air resistance), while the vertical velocity changes linearly due to gravitational acceleration. This independence is what makes the mathematics so elegant and the physics so intuitive.</p>
+
+        <p>The trajectory you see traced in the simulator above is described mathematically by a parabolic equation. The velocity vector—shown in red—constantly changes direction as the vertical component decreases during ascent, reaches zero at the apex, and then increases in the downward direction during descent. Meanwhile, the horizontal component (shown in cyan) remains perfectly constant.</p>
+
+        <h2>Real-World Applications</h2>
+
+        <p>From basketball shots to ballistic missiles, from water fountains to orbital mechanics (before we account for the curvature of Earth), projectile motion governs an enormous range of phenomena. Understanding these principles allows engineers to design everything from sprinkler systems to artillery, and helps physicists model the trajectories of particles in accelerators.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- RAIN-MAN SIMULATOR -->
+    <div class="container" style="margin-top: 80px;">
+        <div class="simulator-wrapper">
+            <div class="simulator-header">
+                <div class="sim-title">[ RELATIVE VELOCITY SIMULATOR ]</div>
+                <div class="sim-label">FIG-002</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <!-- Main Canvas -->
+                <div class="canvas-container" style="height: 500px;">
+                    <canvas id="rainCanvas"></canvas>
+                    
+                    <div class="info-overlay">
+                        <div>
+                            <span class="info-label">RAIN ANGLE:</span>
+                            <span class="info-value" id="rainAngleDisplay">0°</span>
+                        </div>
+                        <div>
+                            <span class="info-label">REL. ANGLE:</span>
+                            <span class="info-value" id="relAngleDisplay">0°</span>
+                        </div>
+                        <div>
+                            <span class="info-label">REL. SPEED:</span>
+                            <span class="info-value" id="relSpeedDisplay">0 m/s</span>
+                        </div>
+                    </div>
+
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #4a90e2;"></div>
+                            <span>RAIN (V<sub>r</sub>)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #e74c3c;"></div>
+                            <span>MAN (V<sub>m</sub>)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f39c12;"></div>
+                            <span>RELATIVE (V<sub>rm</sub>)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vector Diagram Canvas -->
+                <div class="canvas-container" style="height: 500px;">
+                    <canvas id="vectorCanvas"></canvas>
+                    <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 10px; color: #666; letter-spacing: 1px;">
+                        VECTOR DIAGRAM
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls" style="grid-template-columns: 1fr 1fr;">
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>RAIN VELOCITY (V<sub>r</sub>)</span>
+                        <span class="control-value"><span id="rainVelValue">10</span> m/s</span>
+                    </div>
+                    <input type="range" id="rainVelSlider" min="2" max="20" value="10" step="0.5">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>RAIN ANGLE FROM VERTICAL</span>
+                        <span class="control-value"><span id="rainAngleValue">0</span>°</span>
+                    </div>
+                    <input type="range" id="rainAngleSlider" min="-30" max="30" value="0" step="1">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>MAN VELOCITY (V<sub>m</sub>)</span>
+                        <span class="control-value"><span id="manVelValue">5</span> m/s</span>
+                    </div>
+                    <input type="range" id="manVelSlider" min="0" max="15" value="5" step="0.5">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>UMBRELLA ANGLE</span>
+                        <span class="control-value"><span id="umbrellaAngleValue">0</span>°</span>
+                    </div>
+                    <input type="range" id="umbrellaAngleSlider" min="-60" max="60" value="0" step="1">
+                </div>
+            </div>
+
+            <div class="button-group" style="margin-top: 20px;">
+                <button id="autoAdjustBtn">RE-CALCULATE UMBRELLA</button>
+                <button class="secondary" id="resetRainBtn">RESET</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">Relative Velocity</div>
+                    <div class="stat-value"><span id="vrmStat">0.00</span><span class="stat-unit">m/s</span></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Angle from Vertical</div>
+                    <div class="stat-value"><span id="angleStat">0.0</span><span class="stat-unit">°</span></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Protection Efficiency</div>
+                    <div class="stat-value"><span id="efficiencyStat">0</span><span class="stat-unit">%</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <p>The rain-man problem is a classic example of relative velocity in two dimensions. When you're standing still and rain falls vertically, it appears to come straight down. But as soon as you start moving—whether walking or in a car—the rain appears to strike you at an angle. This is not because the rain's actual trajectory has changed, but because you're now observing it from a moving reference frame.</p>
+
+        <h2>The Mathematics of Relative Motion</h2>
+        
+        <p>The velocity of rain relative to you is given by the vector equation: <strong>v⃗<sub>rm</sub> = v⃗<sub>r</sub> - v⃗<sub>m</sub></strong>. This is the core formula of relative velocity—the rain's velocity as you perceive it equals the rain's actual velocity minus your own velocity. If rain falls vertically with velocity v<sub>r</sub> and you move horizontally with velocity v<sub>m</sub>, the rain appears to approach at an angle θ from the vertical, where <strong>tan(θ) = v<sub>m</sub>/v<sub>r</sub></strong>.</p>
+
+        <p>The simulator automatically calculates the optimal umbrella angle using this formula. As you adjust the rain velocity, rain angle, or your walking speed, watch how the umbrella angle updates in real-time to match θ = tan<sup>-1</sup>(v<sub>m</sub>/v<sub>r</sub>). The umbrella is positioned perpendicular to the relative velocity vector v⃗<sub>rm</sub> for maximum protection. When aligned correctly, the efficiency reaches 100%, meaning you stay completely dry!</p>
+
+        <h2>Beyond the Rain</h2>
+
+        <p>The same physics governs countless everyday situations: why airplane pilots must adjust their heading for crosswinds, why swimmers must aim upstream to reach a point directly across a river, and why you lean forward when running into the wind. Understanding relative velocity is fundamental to navigation, from ancient maritime routes to modern GPS systems accounting for Earth's rotation.</p>
+    </div>
+
+    <script>
+        // ============================================
+        // RAIN-MAN SIMULATOR
+        // ============================================
+        const rainCanvas = document.getElementById('rainCanvas');
+        const vectorCanvas = document.getElementById('vectorCanvas');
+        const rctx = rainCanvas.getContext('2d');
+        const vctx = vectorCanvas.getContext('2d');
+
+        // Resize canvases
+        function resizeRainCanvases() {
+            const containers = document.querySelectorAll('.canvas-container');
+            rainCanvas.width = containers[0].clientWidth;
+            rainCanvas.height = containers[0].clientHeight;
+            vectorCanvas.width = containers[1].clientWidth;
+            vectorCanvas.height = containers[1].clientHeight;
+        }
+        resizeRainCanvases();
+        window.addEventListener('resize', resizeRainCanvases);
+
+        // Rain simulation state
+        let rainVelocity = 10; // m/s
+        let rainAngle = 0; // degrees from vertical
+        let manVelocity = 5; // m/s
+        let umbrellaAngle = 0; // degrees from vertical
+        let rainDrops = [];
+        let manPosition = 0;
+        let animationTime = 0;
+
+        // Create rain drops
+        function initRainDrops() {
+            rainDrops = [];
+            for (let i = 0; i < 100; i++) {
+                rainDrops.push({
+                    x: Math.random() * rainCanvas.width,
+                    y: Math.random() * rainCanvas.height,
+                    speed: 0.8 + Math.random() * 0.4 // slight variation
+                });
+            }
+        }
+        initRainDrops();
+
+        // UI Elements for rain simulator
+        const rainVelSlider = document.getElementById('rainVelSlider');
+        const rainAngleSlider = document.getElementById('rainAngleSlider');
+        const manVelSlider = document.getElementById('manVelSlider');
+        const umbrellaAngleSlider = document.getElementById('umbrellaAngleSlider');
+        
+        const rainVelValue = document.getElementById('rainVelValue');
+        const rainAngleValue = document.getElementById('rainAngleValue');
+        const manVelValue = document.getElementById('manVelValue');
+        const umbrellaAngleValue = document.getElementById('umbrellaAngleValue');
+        
+        const rainAngleDisplay = document.getElementById('rainAngleDisplay');
+        const relAngleDisplay = document.getElementById('relAngleDisplay');
+        const relSpeedDisplay = document.getElementById('relSpeedDisplay');
+        
+        const vrmStat = document.getElementById('vrmStat');
+        const angleStat = document.getElementById('angleStat');
+        const efficiencyStat = document.getElementById('efficiencyStat');
+        
+        const autoAdjustBtn = document.getElementById('autoAdjustBtn');
+        const resetRainBtn = document.getElementById('resetRainBtn');
+
+        // Event listeners
+        rainVelSlider.addEventListener('input', (e) => {
+            rainVelocity = parseFloat(e.target.value);
+            rainVelValue.textContent = rainVelocity;
+            autoCalculateUmbrella();
+            updateRainStats();
+        });
+
+        rainAngleSlider.addEventListener('input', (e) => {
+            rainAngle = parseFloat(e.target.value);
+            rainAngleValue.textContent = rainAngle;
+            autoCalculateUmbrella();
+            updateRainStats();
+        });
+
+        manVelSlider.addEventListener('input', (e) => {
+            manVelocity = parseFloat(e.target.value);
+            manVelValue.textContent = manVelocity;
+            autoCalculateUmbrella();
+            updateRainStats();
+        });
+
+        umbrellaAngleSlider.addEventListener('input', (e) => {
+            umbrellaAngle = parseFloat(e.target.value);
+            umbrellaAngleValue.textContent = umbrellaAngle;
+            updateRainStats();
+        });
+
+        // Auto-calculate umbrella angle on load
+        function autoCalculateUmbrella() {
+            const relAngle = calculateRelativeAngle();
+            umbrellaAngle = relAngle;
+            umbrellaAngleSlider.value = relAngle;
+            umbrellaAngleValue.textContent = relAngle.toFixed(1);
+        }
+
+        autoAdjustBtn.addEventListener('click', () => {
+            autoCalculateUmbrella();
+            updateRainStats();
+        });
+        resetRainBtn.addEventListener('click', resetRainSim);
+
+        function resetRainSim() {
+            rainVelocity = 10;
+            rainAngle = 0;
+            manVelocity = 5;
+            
+            rainVelSlider.value = 10;
+            rainAngleSlider.value = 0;
+            manVelSlider.value = 5;
+            
+            rainVelValue.textContent = 10;
+            rainAngleValue.textContent = 0;
+            manVelValue.textContent = 5;
+            
+            manPosition = 0;
+            initRainDrops();
+            autoCalculateUmbrella();
+            updateRainStats();
+        }
+
+        function calculateRelativeAngle() {
+            // Rain velocity components (angle from vertical)
+            const vrx = rainVelocity * Math.sin(rainAngle * Math.PI / 180);
+            const vry = rainVelocity * Math.cos(rainAngle * Math.PI / 180);
+            
+            // Man velocity (horizontal)
+            const vmx = manVelocity;
+            
+            // Relative velocity
+            const vrmx = vrx - vmx;
+            const vrmy = vry;
+            
+            // Angle from vertical
+            const angle = Math.atan2(vrmx, vrmy) * 180 / Math.PI;
+            return angle;
+        }
+
+        function calculateRelativeVelocity() {
+            const vrx = rainVelocity * Math.sin(rainAngle * Math.PI / 180);
+            const vry = rainVelocity * Math.cos(rainAngle * Math.PI / 180);
+            const vmx = manVelocity;
+            const vrmx = vrx - vmx;
+            const vrmy = vry;
+            return Math.sqrt(vrmx * vrmx + vrmy * vrmy);
+        }
+
+        function calculateEfficiency() {
+            const relAngle = calculateRelativeAngle();
+            const diff = Math.abs(umbrellaAngle - relAngle);
+            return Math.max(0, 100 - diff * 2);
+        }
+
+        function updateRainStats() {
+            const relAngle = calculateRelativeAngle();
+            const relSpeed = calculateRelativeVelocity();
+            const efficiency = calculateEfficiency();
+            
+            rainAngleDisplay.textContent = rainAngle.toFixed(1) + '°';
+            relAngleDisplay.textContent = relAngle.toFixed(1) + '°';
+            relSpeedDisplay.textContent = relSpeed.toFixed(2) + ' m/s';
+            
+            vrmStat.textContent = relSpeed.toFixed(2);
+            angleStat.textContent = relAngle.toFixed(1);
+            efficiencyStat.textContent = Math.round(efficiency);
+        }
+
+        // Animation loop for rain
+        function animateRain() {
+            animationTime += 0.016;
+            
+            // Clear canvases
+            rctx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
+            vctx.clearRect(0, 0, vectorCanvas.width, vectorCanvas.height);
+            
+            // Draw rain scene
+            drawRainScene();
+            
+            // Draw vector diagram
+            drawVectorDiagram();
+            
+            requestAnimationFrame(animateRain);
+        }
+
+        function drawRainScene() {
+            const rainAngleRad = rainAngle * Math.PI / 180;
+            
+            // Update and draw rain drops
+            rctx.strokeStyle = '#4a90e280';
+            rctx.lineWidth = 1.5;
+            
+            rainDrops.forEach(drop => {
+                // Update position based on rain velocity and angle
+                const speed = drop.speed;
+                drop.y += rainVelocity * speed * 0.5;
+                drop.x += rainVelocity * Math.sin(rainAngleRad) * speed * 0.5;
+                
+                // Wrap around
+                if (drop.y > rainCanvas.height) {
+                    drop.y = 0;
+                    drop.x = Math.random() * rainCanvas.width;
+                }
+                if (drop.x < 0) drop.x = rainCanvas.width;
+                if (drop.x > rainCanvas.width) drop.x = 0;
+                
+                // Draw rain drop
+                const dropLength = 15;
+                rctx.beginPath();
+                rctx.moveTo(drop.x, drop.y);
+                rctx.lineTo(
+                    drop.x - dropLength * Math.sin(rainAngleRad),
+                    drop.y - dropLength * Math.cos(rainAngleRad)
+                );
+                rctx.stroke();
+            });
+            
+            // Update man position
+            manPosition += manVelocity * 0.3;
+            if (manPosition > rainCanvas.width + 100) manPosition = -100;
+            
+            // Draw ground
+            rctx.fillStyle = '#8b7355';
+            rctx.fillRect(0, rainCanvas.height - 40, rainCanvas.width, 40);
+            
+            // Draw man
+            drawMan(manPosition, rainCanvas.height - 40);
+        }
+
+        function drawMan(x, y) {
+            const ctx = rctx;
+            
+            // Body
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            
+            // Head
+            ctx.fillStyle = '#ffdbac';
+            ctx.beginPath();
+            ctx.arc(x, y - 50, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Body line
+            ctx.beginPath();
+            ctx.moveTo(x, y - 42);
+            ctx.lineTo(x, y - 20);
+            ctx.stroke();
+            
+            // Legs
+            ctx.beginPath();
+            ctx.moveTo(x, y - 20);
+            ctx.lineTo(x - 5, y);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(x, y - 20);
+            ctx.lineTo(x + 5, y);
+            ctx.stroke();
+            
+            // Arm holding umbrella
+            ctx.beginPath();
+            ctx.moveTo(x, y - 38);
+            ctx.lineTo(x + 8, y - 45);
+            ctx.stroke();
+            
+            // Umbrella
+            drawUmbrella(x + 8, y - 45);
+            
+            // Draw velocity vectors beside the man (offset to left for better visibility)
+            const vectorScale = 2.5;
+            const vectorStartX = x - 80;  // Fixed position to left of man
+            const vectorStartY = y - 50;  // Start from chest height
+            const vectorSpacing = 25;     // Vertical spacing between vectors
+            
+            const rainAngleRad = rainAngle * Math.PI / 180;
+            const vrx = rainVelocity * Math.sin(rainAngleRad) * vectorScale;
+            const vry = rainVelocity * Math.cos(rainAngleRad) * vectorScale;
+            
+            // Rain velocity vector (top)
+            drawVector(vectorStartX, vectorStartY, vrx, vry, '#4a90e2', 'V_r');
+            
+            // Man velocity vector (middle)
+            const vmx = manVelocity * vectorScale;
+            drawVector(vectorStartX, vectorStartY + vectorSpacing, vmx, 0, '#e74c3c', 'V_m');
+            
+            // Relative velocity vector (bottom)
+            const vrmx = (vrx - vmx);
+            const vrmy = vry;
+            drawVector(vectorStartX, vectorStartY + vectorSpacing * 2, vrmx, vrmy, '#f39c12', 'V_rm');
+        }
+
+        function drawUmbrella(x, y) {
+            const ctx = rctx;
+            const angleRad = umbrellaAngle * Math.PI / 180;
+            
+            // Handle
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            const handleLength = 25;
+            ctx.lineTo(
+                x + handleLength * Math.sin(angleRad),
+                y - handleLength * Math.cos(angleRad)
+            );
+            ctx.stroke();
+            
+            // Umbrella canopy
+            const canopyWidth = 35;
+            const canopyHeight = 8;
+            
+            ctx.save();
+            ctx.translate(x + handleLength * Math.sin(angleRad), y - handleLength * Math.cos(angleRad));
+            ctx.rotate(angleRad);
+            
+            // Canopy arc
+            ctx.fillStyle = '#e74c3c';
+            ctx.beginPath();
+            ctx.ellipse(0, 0, canopyWidth / 2, canopyHeight, 0, Math.PI, 0);
+            ctx.fill();
+            
+            ctx.strokeStyle = '#c0392b';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            
+            // Canopy ribs
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            for (let i = -1; i <= 1; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * canopyWidth / 4, 0);
+                ctx.lineTo(i * canopyWidth / 4, -canopyHeight);
+                ctx.stroke();
+            }
+            
+            ctx.restore();
+        }
+
+        function drawVector(x, y, vx, vy, color, label) {
+            const ctx = rctx;
+            const length = Math.sqrt(vx * vx + vy * vy);
+            if (length < 1) return;
+            
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + vx, y + vy);
+            ctx.stroke();
+            
+            // Arrow head
+            const angle = Math.atan2(vy, vx);
+            const arrowLength = 6;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(x + vx, y + vy);
+            ctx.lineTo(
+                x + vx - arrowLength * Math.cos(angle - Math.PI / 6),
+                y + vy - arrowLength * Math.sin(angle - Math.PI / 6)
+            );
+            ctx.lineTo(
+                x + vx - arrowLength * Math.cos(angle + Math.PI / 6),
+                y + vy - arrowLength * Math.sin(angle + Math.PI / 6)
+            );
+            ctx.closePath();
+            ctx.fill();
+            
+            // Label
+            ctx.fillStyle = color;
+            ctx.font = 'bold 10px Courier New';
+            ctx.fillText(label, x + vx + 5, y + vy - 5);
+        }
+
+        function drawVectorDiagram() {
+            const ctx = vctx;
+            const centerX = vectorCanvas.width / 2;
+            const centerY = vectorCanvas.height / 2;
+            const scale = 15;
+            
+            // Draw axes
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+            
+            // Horizontal axis
+            ctx.beginPath();
+            ctx.moveTo(50, centerY);
+            ctx.lineTo(vectorCanvas.width - 50, centerY);
+            ctx.stroke();
+            
+            // Vertical axis
+            ctx.beginPath();
+            ctx.moveTo(centerX, 50);
+            ctx.lineTo(centerX, vectorCanvas.height - 50);
+            ctx.stroke();
+            
+            ctx.setLineDash([]);
+            
+            // Axis labels
+            ctx.fillStyle = '#666';
+            ctx.font = '11px Courier New';
+            ctx.fillText('Horizontal', vectorCanvas.width - 80, centerY - 10);
+            ctx.fillText('Vertical', centerX + 10, 60);
+            
+            // Calculate vector components
+            const rainAngleRad = rainAngle * Math.PI / 180;
+            const vrx = rainVelocity * Math.sin(rainAngleRad) * scale;
+            const vry = -rainVelocity * Math.cos(rainAngleRad) * scale;
+            
+            const vmx = manVelocity * scale;
+            const vmy = 0;
+            
+            const vrmx = vrx - vmx;
+            const vrmy = vry;
+            
+            // Draw rain velocity vector (from origin)
+            drawVectorDiagramArrow(ctx, centerX, centerY, vrx, vry, '#4a90e2', 'V_r');
+            
+            // Draw man velocity vector (from origin)
+            drawVectorDiagramArrow(ctx, centerX, centerY, vmx, vmy, '#e74c3c', 'V_m');
+            
+            // Draw -V_m (dashed)
+            ctx.setLineDash([3, 3]);
+            drawVectorDiagramArrow(ctx, centerX, centerY, -vmx, -vmy, '#e74c3c80', '-V_m');
+            ctx.setLineDash([]);
+            
+            // Draw relative velocity (from origin)
+            ctx.lineWidth = 3;
+            drawVectorDiagramArrow(ctx, centerX, centerY, vrmx, vrmy, '#f39c12', 'V_rm');
+            ctx.lineWidth = 2;
+            
+            // Draw vector addition diagram (V_r = V_rm + V_m)
+            ctx.strokeStyle = '#99999940';
+            ctx.setLineDash([2, 2]);
+            ctx.beginPath();
+            ctx.moveTo(centerX + vrmx, centerY + vrmy);
+            ctx.lineTo(centerX + vrx, centerY + vry);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Show angle measurement
+            const relAngle = calculateRelativeAngle();
+            const angleArcRadius = 40;
+            ctx.strokeStyle = '#f39c12';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, angleArcRadius, -Math.PI / 2, -Math.PI / 2 + relAngle * Math.PI / 180, relAngle > 0);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#f39c12';
+            ctx.font = 'bold 11px Courier New';
+            ctx.fillText('θ = ' + relAngle.toFixed(1) + '°', centerX + 50, centerY - 30);
+            
+            // Draw magnitude labels
+            ctx.fillStyle = '#666';
+            ctx.font = '10px Courier New';
+            ctx.fillText('|V_r| = ' + rainVelocity.toFixed(1) + ' m/s', 20, 30);
+            ctx.fillText('|V_m| = ' + manVelocity.toFixed(1) + ' m/s', 20, 45);
+            ctx.fillStyle = '#f39c12';
+            ctx.font = 'bold 10px Courier New';
+            ctx.fillText('|V_rm| = ' + calculateRelativeVelocity().toFixed(2) + ' m/s', 20, 65);
+        }
+
+        function drawVectorDiagramArrow(ctx, x, y, vx, vy, color, label) {
+            const length = Math.sqrt(vx * vx + vy * vy);
+            if (length < 1) return;
+            
+            ctx.strokeStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + vx, y + vy);
+            ctx.stroke();
+            
+            // Arrow head
+            const angle = Math.atan2(vy, vx);
+            const arrowLength = 8;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(x + vx, y + vy);
+            ctx.lineTo(
+                x + vx - arrowLength * Math.cos(angle - Math.PI / 6),
+                y + vy - arrowLength * Math.sin(angle - Math.PI / 6)
+            );
+            ctx.lineTo(
+                x + vx - arrowLength * Math.cos(angle + Math.PI / 6),
+                y + vy - arrowLength * Math.sin(angle + Math.PI / 6)
+            );
+            ctx.closePath();
+            ctx.fill();
+            
+            // Label at the tip
+            ctx.fillStyle = color;
+            ctx.font = 'bold 12px Courier New';
+            const labelOffset = 15;
+            const labelX = x + vx + labelOffset * Math.cos(angle);
+            const labelY = y + vy + labelOffset * Math.sin(angle);
+            ctx.fillText(label, labelX, labelY);
+        }
+
+        // Initialize and start animation
+        autoCalculateUmbrella();  // Calculate optimal umbrella angle on load
+        updateRainStats();
+        animateRain();
+    </script>
+
+    <script>
+        const canvas = document.getElementById('simulatorCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Constants
+        const g = 9.81; // gravity (m/s²)
+        const scale = 3; // pixels per meter
+        
+        // Simulation state
+        let angle = 45;
+        let v0 = 20;
+        let isAnimating = false;
+        let animationId = null;
+        let trajectory = [];
+        let currentTime = 0;
+        let projectile = { x: 0, y: 0, vx: 0, vy: 0 };
+        let maxHeight = 0;
+        let range = 0;
+        let flightTime = 0;
+
+        // UI Elements
+        const angleSlider = document.getElementById('angleSlider');
+        const velocitySlider = document.getElementById('velocitySlider');
+        const angleValue = document.getElementById('angleValue');
+        const velocityValue = document.getElementById('velocityValue');
+        const launchBtn = document.getElementById('launchBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        // Info displays
+        const timeDisplay = document.getElementById('timeDisplay');
+        const heightDisplay = document.getElementById('heightDisplay');
+        const distanceDisplay = document.getElementById('distanceDisplay');
+        const speedDisplay = document.getElementById('speedDisplay');
+        
+        // Stats displays
+        const maxHeightStat = document.getElementById('maxHeightStat');
+        const rangeStat = document.getElementById('rangeStat');
+        const flightTimeStat = document.getElementById('flightTimeStat');
+
+        // Event listeners
+        angleSlider.addEventListener('input', (e) => {
+            angle = parseInt(e.target.value);
+            angleValue.textContent = angle;
+            if (!isAnimating) {
+                calculateTrajectory();
+                drawStatic();
+            }
+        });
+
+        velocitySlider.addEventListener('input', (e) => {
+            v0 = parseInt(e.target.value);
+            velocityValue.textContent = v0;
+            if (!isAnimating) {
+                calculateTrajectory();
+                drawStatic();
+            }
+        });
+
+        launchBtn.addEventListener('click', launch);
+        resetBtn.addEventListener('click', reset);
+
+        // Calculate full trajectory
+        function calculateTrajectory() {
+            const angleRad = angle * Math.PI / 180;
+            const vx = v0 * Math.cos(angleRad);
+            const vy = v0 * Math.sin(angleRad);
+            
+            // Calculate key parameters
+            flightTime = (2 * vy) / g;
+            maxHeight = (vy * vy) / (2 * g);
+            range = (v0 * v0 * Math.sin(2 * angleRad)) / g;
+            
+            // Update stats
+            maxHeightStat.textContent = maxHeight.toFixed(2);
+            rangeStat.textContent = range.toFixed(2);
+            flightTimeStat.textContent = flightTime.toFixed(2);
+            
+            // Generate trajectory points
+            trajectory = [];
+            const steps = 100;
+            for (let i = 0; i <= steps; i++) {
+                const t = (flightTime * i) / steps;
+                const x = vx * t;
+                const y = vy * t - 0.5 * g * t * t;
+                if (y >= 0) {
+                    trajectory.push({ x, y });
+                }
+            }
+        }
+
+        // Draw static state (before launch)
+        function drawStatic() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const originX = 50;
+            const originY = canvas.height - 50;
+            
+            // Draw grid
+            drawGrid(originX, originY);
+            
+            // Draw axes
+            drawAxes(originX, originY);
+            
+            // Draw trajectory path (dotted)
+            ctx.setLineDash([5, 5]);
+            ctx.strokeStyle = '#0066ff40';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            trajectory.forEach((point, i) => {
+                const x = originX + point.x * scale;
+                const y = originY - point.y * scale;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw launcher
+            const angleRad = angle * Math.PI / 180;
+            const launcherLength = 30;
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(originX, originY);
+            ctx.lineTo(
+                originX + launcherLength * Math.cos(angleRad),
+                originY - launcherLength * Math.sin(angleRad)
+            );
+            ctx.stroke();
+            
+            // Draw initial velocity vector
+            const vectorScale = 2;
+            drawVelocityVector(
+                originX,
+                originY,
+                v0 * Math.cos(angleRad) * vectorScale,
+                v0 * Math.sin(angleRad) * vectorScale,
+                '#ff6b6b80'
+            );
+        }
+
+        // Animation loop
+        function animate() {
+            const angleRad = angle * Math.PI / 180;
+            const vx = v0 * Math.cos(angleRad);
+            const vy = v0 * Math.sin(angleRad);
+            
+            const dt = 0.016; // ~60fps
+            currentTime += dt;
+            
+            // Update projectile position
+            projectile.x = vx * currentTime;
+            projectile.y = vy * currentTime - 0.5 * g * currentTime * currentTime;
+            projectile.vx = vx;
+            projectile.vy = vy - g * currentTime;
+            
+            // Check if landed
+            if (projectile.y < 0 || currentTime > flightTime) {
+                isAnimating = false;
+                projectile.y = 0;
+                projectile.x = range;
+                projectile.vy = 0;
+                launchBtn.textContent = 'LAUNCH';
+                drawFrame();
+                return;
+            }
+            
+            drawFrame();
+            
+            if (isAnimating) {
+                animationId = requestAnimationFrame(animate);
+            }
+        }
+
+        // Draw single frame
+        function drawFrame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const originX = 50;
+            const originY = canvas.height - 50;
+            
+            // Draw grid
+            drawGrid(originX, originY);
+            
+            // Draw axes
+            drawAxes(originX, originY);
+            
+            // Draw trajectory path (up to current position)
+            ctx.strokeStyle = '#0066ff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            const currentX = projectile.x;
+            trajectory.forEach((point, i) => {
+                if (point.x <= currentX) {
+                    const x = originX + point.x * scale;
+                    const y = originY - point.y * scale;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+            
+            // Draw projectile
+            const px = originX + projectile.x * scale;
+            const py = originY - projectile.y * scale;
+            
+            ctx.fillStyle = '#ff6b6b';
+            ctx.beginPath();
+            ctx.arc(px, py, 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw velocity vectors
+            const vectorScale = 2;
+            
+            // Total velocity (red)
+            drawVelocityVector(px, py, projectile.vx * vectorScale, projectile.vy * vectorScale, '#ff6b6b');
+            
+            // Horizontal component (cyan)
+            drawVelocityVector(px, py, projectile.vx * vectorScale, 0, '#4ecdc4', true);
+            
+            // Vertical component (light cyan)
+            drawVelocityVector(px, py, 0, projectile.vy * vectorScale, '#95e1d3', true);
+            
+            // Update info display
+            const speed = Math.sqrt(projectile.vx * projectile.vx + projectile.vy * projectile.vy);
+            timeDisplay.textContent = currentTime.toFixed(2) + ' s';
+            heightDisplay.textContent = Math.max(0, projectile.y).toFixed(2) + ' m';
+            distanceDisplay.textContent = projectile.x.toFixed(2) + ' m';
+            speedDisplay.textContent = speed.toFixed(2) + ' m/s';
+        }
+
+        // Helper functions
+        function drawGrid(originX, originY) {
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 0.5;
+            
+            // Vertical lines
+            for (let x = originX; x < canvas.width; x += 20 * scale) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            // Horizontal lines
+            for (let y = originY; y > 0; y -= 20 * scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+
+        function drawAxes(originX, originY) {
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            
+            // X-axis
+            ctx.beginPath();
+            ctx.moveTo(originX, originY);
+            ctx.lineTo(canvas.width - 20, originY);
+            ctx.stroke();
+            
+            // Arrow
+            ctx.beginPath();
+            ctx.moveTo(canvas.width - 20, originY);
+            ctx.lineTo(canvas.width - 28, originY - 4);
+            ctx.lineTo(canvas.width - 28, originY + 4);
+            ctx.closePath();
+            ctx.fillStyle = '#333';
+            ctx.fill();
+            
+            // Y-axis
+            ctx.beginPath();
+            ctx.moveTo(originX, originY);
+            ctx.lineTo(originX, 20);
+            ctx.stroke();
+            
+            // Arrow
+            ctx.beginPath();
+            ctx.moveTo(originX, 20);
+            ctx.lineTo(originX - 4, 28);
+            ctx.lineTo(originX + 4, 28);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Labels
+            ctx.fillStyle = '#666';
+            ctx.font = '11px Courier New';
+            ctx.fillText('x', canvas.width - 15, originY + 15);
+            ctx.fillText('y', originX - 15, 25);
+        }
+
+        function drawVelocityVector(x, y, vx, vy, color, dashed = false) {
+            const length = Math.sqrt(vx * vx + vy * vy);
+            if (length < 1) return;
+            
+            if (dashed) {
+                ctx.setLineDash([3, 3]);
+            }
+            
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + vx, y - vy);
+            ctx.stroke();
+            
+            // Arrow head
+            const angle = Math.atan2(vy, vx);
+            const arrowLength = 8;
+            ctx.beginPath();
+            ctx.moveTo(x + vx, y - vy);
+            ctx.lineTo(
+                x + vx - arrowLength * Math.cos(angle - Math.PI / 6),
+                y - vy + arrowLength * Math.sin(angle - Math.PI / 6)
+            );
+            ctx.lineTo(
+                x + vx - arrowLength * Math.cos(angle + Math.PI / 6),
+                y - vy + arrowLength * Math.sin(angle + Math.PI / 6)
+            );
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+            
+            ctx.setLineDash([]);
+        }
+
+        function launch() {
+            if (isAnimating) {
+                // Pause
+                isAnimating = false;
+                cancelAnimationFrame(animationId);
+                launchBtn.textContent = 'RESUME';
+            } else {
+                // Start/Resume
+                if (currentTime === 0 || currentTime >= flightTime) {
+                    // Fresh start
+                    currentTime = 0;
+                    projectile = { x: 0, y: 0, vx: 0, vy: 0 };
+                }
+                isAnimating = true;
+                launchBtn.textContent = 'PAUSE';
+                animate();
+            }
+        }
+
+        function reset() {
+            isAnimating = false;
+            cancelAnimationFrame(animationId);
+            currentTime = 0;
+            projectile = { x: 0, y: 0, vx: 0, vy: 0 };
+            launchBtn.textContent = 'LAUNCH';
+            
+            // Reset displays
+            timeDisplay.textContent = '0.00 s';
+            heightDisplay.textContent = '0.00 m';
+            distanceDisplay.textContent = '0.00 m';
+            speedDisplay.textContent = '0.00 m/s';
+            
+            calculateTrajectory();
+            drawStatic();
+        }
+
+        // Initialize
+        calculateTrajectory();
+        drawStatic();
+    </script>
+</body>
+</html>
