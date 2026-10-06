@@ -1,6 +1,22 @@
 // Publication list — edit here; publications.html and the landing page read from it.
 window.PUBLICATIONS = [
   {
+    "title": "Quantitative Modelling of Amyloid-β Dynamics in Brain, CSF, and Plasma During Sleep and Wakefulness",
+    "authors": "Sangeet S, D'Rozario AL, Phillips CL, Hoyos CM, Lucey BP, Postnova S",
+    "journal": "bioRxiv",
+    "doi": "10.64898/2026.09.07.749991",
+    "year": 2026,
+    "abstract": "Amyloid-beta (Aβ) accumulation in the brain is linked to Alzheimer’s disease. In healthy individuals, Aβ rises during wakefulness and is cleared during sleep, yet the effects of sleep disturbances on the Aβ dynamics are unclear. We developed a model, incorporating brain, cerebrospinal fluid (CSF), and plasma, to investigate the Aβ dynamics along the sleep-wake cycles. The model reproduces the experimentally observed 24-hour Aβ42 oscillations in CSF (660–760 pgml-1) and plasma (15–19 pgml-1) and predicts brain Aβ dynamics. Indwelling lumbar catheter data show elevated CSF Aβ42 levels on the second morning after a full night of sleep compared to first morning. The model predicts this increased level is due to repeated CSF sampling, which affects Aβ levels through pressure-mediated changes in CSF, impaired sleep-associated clearance, or their synergistic effect. These findings provide a framework for understanding Aβ regulation, highlighting sleep’s protective role and the need for non-invasive measurement approaches.",
+  },
+  {
+    "title": "Modelling Amyloid-beta clearance dynamics across sleep-wake cycles in healthy conditions",
+    "authors": "Sangeet S, D'Rozario AL, Phillips CL, Hoyos CM, Postnova S",
+    "journal": "Sleep Medicine",
+    "doi": "10.1016/j.sleep.2025.106992",
+    "year": 2026,
+    "abstract": "Understanding the fundamental mechanism of brain waste clearance is essential to elucidate physiological neurometabolite dynamics in healthy individuals. Sleep, particularly slow-wave sleep, is critical for the clearance of neurometabolites that accumulate in the brain during wakefulness. One of these neurometabolites is amyloid beta (Aβ), whose clearance increases approximately twofold during sleep compared to wakefulness, and whose accumulation has been linked to Alzheimer’s Disease. Clearance of neurometabolites is proposed to take place via complex interaction between the brain, cerebrospinal fluid and plasma, including the glymphatic system and the blood-brain barrier. Mathematical modelling is a useful tool to quantify and to better understand this complex system, especially since some of its dynamics are hard to measure experimentally. Successful models include microglial phagocytosis, glymphatic flow, and blood-brain barrier transport in rodents or in pathological states. However, they have not yet accounted for the effects of the sleep-wake cycles on the clearance dynamics. The objective of this study was to (i) develop a multi-compartment model of Aβ clearance dynamics across the brain, CSF, and plasma along the sleep-wake cycles in healthy individuals, and (ii) apply this model to explain experimental data. Our three-compartment model successfully reproduced the sleep-wake dynamics of Aβ concentration in CSF and plasma, and predicted Aβ dynamics in the brain. By applying the model to data, we were able to predict the potential mechanisms behind experimental observations of elevated CSF Aβ levels during normal sleep-wake cycles. Further model validation should be done against sleep disruption experiments."
+  },
+  {
     "title": "EVOLVE: A Web Platform for AI-based Protein Mutation Prediction and Evolutionary Phase Exploration",
     "authors": "Sangeet S, Sinha A, Nair MB, Mahata A, Sarkar R, Roy S",
     "journal": "Journal of Chemical Information and Modeling",
