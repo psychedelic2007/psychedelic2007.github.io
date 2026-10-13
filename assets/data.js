@@ -1,6 +1,14 @@
 // Publication list — edit here; publications.html and the landing page read from it.
 window.PUBLICATIONS = [
   {
+    "title": "A readthrough-permissive stop context and C-terminal constraint distinguish AQP4ex from its orthodox aquaporin paralogues",
+    "authors": "Sangeet S",
+    "journal": "ResearchSqaure",
+    "doi": "10.21203/rs.3.rs-11323608/v1",
+    "year": 2026,
+    "abstract": "AQP4ex is an isoform of aquaporin-4 (AQP4) produced by readthrough of the UGA stop codon that carries a C-terminal extension encoded in the 3′ untranslated region (UTR). It is required to anchor AQP4 at perivascular astrocyte endfeet. Binding assays have mapped the interaction of the human peptide with α-syntrophin, but whether that surface is evolutionarily conserved and whether any of the remaining positions are constrained, is unknown. Here we use evolutionary constraint as a residue level map across AQP4 orthologues from 759 vertebrate species, 697 of them with a 3′-UTR record. The readthrough-permissive UGA-C context was present in 99.3% of these 697 species. Codon models identified purifying selection at 16 of 28 extension positions (12 after Bonferroni correction), concentrated in a C-terminal segment ending in KETDLL, which is retained in 72.8% of species. Synonymous rates were suppressed across the extension, indicating constraint on the nucleotide sequence in addition to the encoded peptide. None of five orthodox aquaporin paralogues showed this combination. AQP5 retains the UGA-C context in 58.6% of species, but shows no purifying selection on downstream frame, suggesting that a permissive context alone does not maintain a constrained extension. These findings identify the C terminus of AQP4ex as an evolutionarily conserved candidate anchoring interface."
+  },
+  {
     "title": "Quantitative Modelling of Amyloid-β Dynamics in Brain, CSF, and Plasma During Sleep and Wakefulness",
     "authors": "Sangeet S, D'Rozario AL, Phillips CL, Hoyos CM, Lucey BP, Postnova S",
     "journal": "bioRxiv",
