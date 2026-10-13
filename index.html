@@ -576,7 +576,7 @@
 <script>
   // Featured papers on the landing page (by DOI)
   (function () {
-    const featured = ['10.1016/j.sleep.2025.106992', '10.1021/acs.jcim.5c00026', '10.1021/acs.jpcb.2c04574', '10.1038/s41598-025-92644-y'];
+    const featured = ['10.1016/j.sleep.2025.106992', '10.1021/acs.jcim.5c00026', '10.21203/rs.3.rs-11323608/v1', '10.1021/acs.jpcb.2c04574', '10.1038/s41598-025-92644-y'];
     const all = window.PUBLICATIONS;
     document.getElementById('featuredPubs').innerHTML = featured
       .map(doi => all.findIndex(p => p.doi === doi))
